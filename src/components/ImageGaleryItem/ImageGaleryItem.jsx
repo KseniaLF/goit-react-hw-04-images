@@ -1,41 +1,36 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { ImageGalleryItem } from 'components/ImageGallery/ImageGallery.styled';
 
 import { Modal } from 'components/Modal/Modal';
 
-export class ImageItem extends Component {
-  state = {
-    isOpen: false,
+export const ImageItem = ({ image }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+  const closeModal = () => {
+    setIsOpen(false);
   };
 
-  openModal = () => {
-    this.setState({ isOpen: true });
-  };
-  closeModal = () => {
-    this.setState({ isOpen: false });
-  };
+  return (
+    <ImageGalleryItem>
+      <div onClick={openModal}>
+        <img src={image.webformatURL} alt={image.tags} />
+      </div>
 
-  render() {
-    const { image } = this.props;
-    return (
-      <ImageGalleryItem key={image.id}>
-        <div onClick={this.openModal}>
-          <img src={image.webformatURL} alt={image.tags} />
-        </div>
-
-        {this.state.isOpen && (
-          <Modal
-            img={image.largeImageURL}
-            openModal={this.state.isOpen}
-            closeModal={this.closeModal}
-          />
-        )}
-      </ImageGalleryItem>
-    );
-  }
-}
+      {isOpen && (
+        <Modal
+          img={image.largeImageURL}
+          openModal={isOpen}
+          closeModal={closeModal}
+        />
+      )}
+    </ImageGalleryItem>
+  );
+};
 
 ImageItem.propTypes = {
   image: PropTypes.object.isRequired,
